@@ -52,6 +52,17 @@ public class MedTaggerRESTPlugin implements UIMAServerPlugin {
 
                 AggregateBuilder ab = new AggregateBuilder();
                 ab.add(descMedTaggerTAE);
+
+                AnalysisEngineDescription descMedXNTAE = null;
+                try {
+                     descMedXNTAE = createEngineDescription(
+                            "desc.medxndesc.aggregate_analysis_engine.MedXNAggregateTAE");
+                } catch (InvalidXMLException | IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                ab.add(descMedXNTAE);
+
                 // And register the stream
                 try {
                     uimaServer.registerStream(id, null, ab.createAggregateDescription());
@@ -64,5 +75,7 @@ public class MedTaggerRESTPlugin implements UIMAServerPlugin {
             e.printStackTrace();
         }
         uimaServer.registerSerializer("medtagger", new ConceptMentionResultSerializer());
+        uimaServer.registerSerializer("medxn", new DrugResultSerializer());
+
     }
 }
